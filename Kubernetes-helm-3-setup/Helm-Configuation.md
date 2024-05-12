@@ -1,24 +1,33 @@
-# Kubernetes v1.28 cluster Setup on unduntu Using Kubeadm and Containerd
+## Kubernetes cluster  helm 3 Configuration and setup steps.
 
 ## Overview
 This guide provides detailed instructions for setting up a Kubernetes cluster using Kubeadm. The guide includes instructions for installing and configuring containerd and Kubernetes, disabling swap, initializing the cluster, installing Flannel, and joining nodes to the cluster.
 
-## Prerequisites
-Before starting the installation process, ensure that the following prerequisites are met:
+## Installing Helm
+This guide shows how to install the Helm CLI. Helm can be installed either from source, or from pre-built binary releases.
 
-- You have at least two Ubuntu 18.04 or higher servers available for creating the cluster.
-- Each server has at least 2GB of RAM and 2 CPU cores.
-- The servers have network connectivity to each other.
-- You have root access to each server.
+## From the Binary Releases
+Every release of Helm provides binary releases for a variety of OSes. These binary versions can be manually downloaded and installed.
 
-## Installation Steps
-The following are the step-by-step instructions for setting up a  Kubernetes cluster using Kubeadm:
+- Download your desired version
+- Unpack it (tar -zxvf helm-v3.0.0-linux-amd64.tar.gz)
+- Find the helm binary in the unpacked directory, and move it to its desired destination (mv linux-amd64/helm /usr/local/bin/helm)
+  
+From there, you should be able to run the client and add the stable repo: helm help.
 
-Update the system's package list and install necessary dependencies using the following commands:
+## Note:
+
+Helm automated tests are performed for Linux AMD64 only during CircleCi builds and releases. Testing of other OSes are the responsibility of the community requesting Helm for the OS in question.
+
+## From Script
+Helm now has an installer script that will automatically grab the latest version of Helm and install it locally.
+
+You can fetch that script, and then execute it locally. It's well documented so that you can read through it and understand what it is doing before you run it.
 
 ```
-sudo apt-get update
-sudo apt install apt-transport-https curl -y
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
 ```
 
 ## Install containerd
