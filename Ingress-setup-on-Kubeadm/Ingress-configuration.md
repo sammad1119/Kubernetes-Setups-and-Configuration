@@ -45,7 +45,6 @@ To complete these steps you need admin access to your cluster. Refer to to your 
 kubectl apply -f deployments/common/ns-and-sa.yaml
 ```
 - Create a cluster role and binding for the service account:
-
  ```
 kubectl apply -f deployments/rbac/rbac.yaml
 ```
