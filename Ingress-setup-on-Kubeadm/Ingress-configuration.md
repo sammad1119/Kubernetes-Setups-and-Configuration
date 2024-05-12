@@ -1,4 +1,4 @@
-## Installation of Nginx Ingress Controller
+## Installation steps for Nginx Ingress Controller 
 
 This guide explains how to install NGINX Ingress Controller in a Kubernetes cluster using manifests. In addition, it provides instructions on how to set up role-based access control, create  resources  and also uninstall NGINX Ingress Controller.
 
@@ -14,6 +14,9 @@ Choose one of the following methods to get the NGINX Ingress Controller image:
 <b>NGINX Ingress Controller:</b> 
 <br>
 Download the image nginx/nginx-ingress from DockerHub.
+
+If you have not downloaded the image no problem while performing other steps image will be downloaded automatically.
+
 
 ## Clone the repository
 
