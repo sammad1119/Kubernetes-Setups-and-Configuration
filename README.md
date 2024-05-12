@@ -1,7 +1,5 @@
 # Understanding of Ingress,helm,promethues
 
-This repo contains all the configuration steps and commands 
-
 ## Helm 
 
 In Kubernetes, Helm is a package manager that facilitates the deployment and management of applications on a Kubernetes cluster. It helps in defining, installing, and upgrading complex Kubernetes applications. 
