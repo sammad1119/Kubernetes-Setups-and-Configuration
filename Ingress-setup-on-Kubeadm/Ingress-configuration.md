@@ -15,17 +15,21 @@ Choose one of the following methods to get the NGINX Ingress Controller image:
 <br>
 Download the image nginx/nginx-ingress from DockerHub.
 
+## Clone the repository
 
-Download the image using your NGINX Ingress Controller subscription certificate and key. See the Getting the F5 Registry NGINX Ingress Controller Image guide.
-Use your NGINX Ingress Controller subscription JWT token to get the image: Instructions are in Getting the NGINX Ingress Controller Image with JWT.
-Build your own image: To build your own image, follow the Building NGINX Ingress Controller guide.
-
-Clone the repository
 Clone the NGINX Ingress Controller repository using the command shown below, and replace <version_number> with the specific release you want to use.
 
- Copy
+ ```
+
 git clone https://github.com/nginxinc/kubernetes-ingress.git --branch <version_number>
-For example, if you want to use version 3.5.1, the command would be git clone https://github.com/nginxinc/kubernetes-ingress.git --branch v3.5.1.
+
+```
+For example,
+
+```
+If you want to use version 3.5.1, the command would be git clone https://github.com/nginxinc/kubernetes-ingress.git --branch v3.5.1.
+
+```
 
 This guide assumes you are using the latest release.
 
