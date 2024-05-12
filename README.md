@@ -34,3 +34,28 @@ Its main components include:
 - Annotations: Ingress annotations are optional metadata that can be added to Ingress resources to provide additional configuration options or hints to the Ingress controller. Annotations can be used to customize the behavior of the Ingress controller, such as configuring SSL termination, setting up rate limiting, or defining rewrite rules.
 
 Together, these components enable Kubernetes users to define and manage complex routing configurations for handling incoming HTTP(S) traffic to services within the cluster.
+
+## Promethues
+
+
+Prometheus is an open-source monitoring and alerting toolkit originally built by SoundCloud in 2012. It is now a standalone open-source project maintained by the Cloud Native Computing Foundation (CNCF). Prometheus is designed for reliability, scalability, and ease of use. 
+
+Its main components include:
+
+- Prometheus Server: The core component responsible for collecting and storing time-series data metrics from various targets. It scrapes and stores metrics data in its time-series database, allowing for querying and analysis.
+
+- Data Model: Prometheus uses a multidimensional data model with time series identified by metric name and key/value pairs. This model allows flexible querying and aggregation over time.
+
+- PromQL: Prometheus Query Language is a powerful expression language for querying and manipulating metrics data. It enables users to perform ad-hoc analysis, create dashboards, and set up alerting rules.
+
+- Prometheus Alertmanager: This component handles alerts sent by client applications such as Prometheus server. It manages groupings, deduplications, and routing of alerts to various notification channels (e.g., email, PagerDuty, Slack).
+
+- Service Discovery: Prometheus supports multiple service discovery mechanisms to dynamically discover and monitor targets. This includes DNS-based discovery, Kubernetes service discovery, and integrations with cloud service providers.
+
+- Exporters: Exporters are small programs that expose metrics from third-party systems in a format Prometheus can understand. There are exporters available for various technologies like databases, web servers, and cloud platforms.
+
+- Push Gateway: In some cases, where the architecture doesn't allow Prometheus to scrape metrics directly from a target, the Push Gateway can be used. It allows short-lived jobs to push their metrics to Prometheus.
+
+- Grafana: While not a part of Prometheus itself, Grafana is often used alongside Prometheus for visualization and monitoring. It provides rich visualization capabilities, dashboards, and alerting features that complement Prometheus's monitoring capabilities.
+
+These components work together to provide robust monitoring, alerting, and visualization solutions for modern cloud-native architectures.
