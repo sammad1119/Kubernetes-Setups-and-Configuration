@@ -68,5 +68,10 @@ sudo apt-get update
 sudo apt-get install helm
 
 ```
+## More ways for downloading helm on different system follow 
+Follow for more guidence
+- https://helm.sh/docs/intro/install/
+
 ## Conclusion 
 
+In most cases, installation is as simple as getting a pre-built helm binary. This document covers additional cases for those who want to do more sophisticated things with Helm.
