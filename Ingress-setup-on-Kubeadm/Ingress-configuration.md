@@ -33,45 +33,45 @@ If you want to use version 3.5.1, the command would be git clone https://github.
 
 This guide assumes you are using the latest release.
 
-Set up role-based access control (RBAC)
-Admin access required
-To complete these steps you need admin access to your cluster. Refer to to your Kubernetes platform’s documentation to set up admin access. For Google Kubernetes Engine (GKE), you can refer to their Role-Based Access Control guide.
-Create a namespace and a service account:
+## Set up role-based access control (RBAC)
 
- Copy
+<b>Admin access required<b>
+
+To complete these steps you need admin access to your cluster. Refer to to your Kubernetes platform’s documentation to set up admin access. For Google Kubernetes Engine (GKE), you can refer to their Role-Based Access Control guide.
+
+<br>
+Create a namespace and a service account:
+```
 kubectl apply -f deployments/common/ns-and-sa.yaml
+```
 Create a cluster role and binding for the service account:
 
- Copy
+ ```
 kubectl apply -f deployments/rbac/rbac.yaml
+```
 
-If you’re planning to use NGINX App Protect or NGINX App Protect DoS, additional roles and bindings are needed.
+ 
+## Create common resources
 
-(NGINX App Protect only) Create the App Protect role and binding:
-
- Copy
-kubectl apply -f deployments/rbac/ap-rbac.yaml
-(NGINX App Protect DoS only) Create the App Protect DoS role and binding:
-
- Copy
-kubectl apply -f deployments/rbac/apdos-rbac.yaml
-Create common resources
 In this section, you’ll create resources that most NGINX Ingress Controller installations require:
 
-(Optional) Create a secret for the default NGINX server’s TLS certificate and key. Complete this step only if you’re using the default server TLS secret command-line argument. If you’re not, feel free to skip this step.
-
+- (Optional) Create a secret for the default NGINX server’s TLS certificate and key. Complete this step only if you’re using the default server TLS secret command-line argument. If you’re not, feel free to skip this step.
+<br>
 By default, the server returns a 404 Not Found page for all requests when no ingress rules are set up. Although we provide a self-signed certificate and key for testing purposes, we recommend using your own certificate.
 
- Copy
+ ```
 kubectl apply -f examples/shared-examples/default-server-secret/default-server-secret.yaml
-Create a ConfigMap to customize your NGINX settings:
+```
+- Create a ConfigMap to customize your NGINX settings:
 
- Copy
+ ```
 kubectl apply -f deployments/common/nginx-config.yaml
+```
 Create an IngressClass resource. NGINX Ingress Controller won’t start without an IngressClass resource.
 
- Copy
+ ```
 kubectl apply -f deployments/common/ingress-class.yaml
+```
 If you want to make this NGINX Ingress Controller instance your cluster’s default, uncomment the ingressclass.kubernetes.io/is-default-class annotation. This action will auto-assign IngressClass to new ingresses that don’t specify an ingressClassName.
 
 Create custom resources
