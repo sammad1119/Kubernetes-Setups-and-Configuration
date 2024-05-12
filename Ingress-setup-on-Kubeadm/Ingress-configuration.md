@@ -26,8 +26,9 @@ git clone https://github.com/nginxinc/kubernetes-ingress.git --branch <version_n
 ```
 For example,
 
+If you want to use version 3.5.1, the command would be
 ```
-If you want to use version 3.5.1, the command would be git clone https://github.com/nginxinc/kubernetes-ingress.git --branch v3.5.1.
+ git clone https://github.com/nginxinc/kubernetes-ingress.git --branch v3.5.1.
 
 ```
 
@@ -35,16 +36,15 @@ This guide assumes you are using the latest release.
 
 ## Set up role-based access control (RBAC)
 
-<b>Admin access required<b>
-
+Admin access required
+<br>
 To complete these steps you need admin access to your cluster. Refer to to your Kubernetes platform’s documentation to set up admin access. For Google Kubernetes Engine (GKE), you can refer to their Role-Based Access Control guide.
 
-<br>
-Create a namespace and a service account:
+- Create a namespace and a service account:
 ```
 kubectl apply -f deployments/common/ns-and-sa.yaml
 ```
-Create a cluster role and binding for the service account:
+- Create a cluster role and binding for the service account:
 
  ```
 kubectl apply -f deployments/rbac/rbac.yaml
@@ -55,14 +55,12 @@ kubectl apply -f deployments/rbac/rbac.yaml
 
 In this section, you’ll create resources that most NGINX Ingress Controller installations require:
 
-- (Optional) Create a secret for the default NGINX server’s TLS certificate and key. Complete this step only if you’re using the default server TLS secret command-line argument. If you’re not, feel free to skip this step.
-<br>
-By default, the server returns a 404 Not Found page for all requests when no ingress rules are set up. Although we provide a self-signed certificate and key for testing purposes, we recommend using your own certificate.
+(Optional) Create a secret for the default NGINX server’s TLS certificate and key. Complete this step only if you’re using the default server TLS secret command-line argument. If you’re not, feel free to skip this step.By default, the server returns a 404 Not Found page for all requests when no ingress rules are set up. Although we provide a self-signed certificate and key for testing purposes, we recommend using your own certificate.
 
  ```
 kubectl apply -f examples/shared-examples/default-server-secret/default-server-secret.yaml
 ```
-- Create a ConfigMap to customize your NGINX settings:
+Create a ConfigMap to customize your NGINX settings:
 
  ```
 kubectl apply -f deployments/common/nginx-config.yaml
@@ -74,167 +72,108 @@ kubectl apply -f deployments/common/ingress-class.yaml
 ```
 If you want to make this NGINX Ingress Controller instance your cluster’s default, uncomment the ingressclass.kubernetes.io/is-default-class annotation. This action will auto-assign IngressClass to new ingresses that don’t specify an ingressClassName.
 
-Create custom resources
+## Create custom resources defination (CRDs)
+
 To make sure your NGINX Ingress Controller pods reach the Ready state, you’ll need to create custom resource definitions (CRDs) for various components.
 
 Alternatively, you can disable this requirement by setting the -enable-custom-resources command-line argument to false.
 
 There are two ways you can install the custom resource definitions:
 
-Using a URL to apply a single CRD yaml file, which we recommend.
-Applying your local copy of the CRD yaml files, which requires you to clone the repository.
-INSTALL CRDS FROM SINGLE YAML
-INSTALL CRDS AFTER CLONING THE REPO
+- Using a URL to apply a single CRD yaml file, which we recommend.
+- Applying your local copy of the CRD yaml files, which requires you to clone the repository.
+
+
+## INSTALL CRDS FROM SINGLE YAML
 This single YAML file creates CRDs for the following resources:
+- VirtualServer and VirtualServerRoute
+- TransportServer
+- Policy
+- GlobalConfiguration
 
-VirtualServer and VirtualServerRoute
-TransportServer
-Policy
-GlobalConfiguration
- Copy
+```
 kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds.yaml
-INSTALL CRDS FROM SINGLE YAML
-INSTALL CRDS AFTER CLONING THE REPO
-Core custom resource definitions
-Create CRDs for VirtualServer and VirtualServerRoute, TransportServer, Policy and GlobalConfiguration:
 
- Copy
-kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds.yaml
-Optional custom resource definitions
-For the NGINX App Protect WAF module, create CRDs for APPolicy, APLogConf and APUserSig:
+```
+or 
 
- Copy
-kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds-nap-waf.yaml
-For the NGINX App Protect DoS module, create CRDs for APDosPolicy, APDosLogConf and DosProtectedResource:
+## INSTALL CRDS AFTER CLONING THE REPO
 
- Copy
-kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds-nap-dos.yaml
-Deploy NGINX Ingress Controller
+If you are installing the CRDs this way, ensure you have first cloned the repository.
+
+These YAML files create CRDs for the following resources:
+
+- VirtualServer and VirtualServerRoute
+- TransportServer
+- Policy
+- GlobalConfiguration
+```
+kubectl apply -f config/crd/bases/k8s.nginx.org_virtualservers.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_virtualserverroutes.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_transportservers.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_policies.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_globalconfigurations.yaml
+
+```
+ 
+## Deploy NGINX Ingress Controller
+
 You have two options for deploying NGINX Ingress Controller:
 
-Deployment. Choose this method for the flexibility to dynamically change the number of NGINX Ingress Controller replicas.
-DaemonSet. Choose this method if you want NGINX Ingress Controller to run on all nodes or a subset of nodes.
+<b> Deployment:</b> Choose this method for the flexibility to dynamically change the number of NGINX Ingress Controller replicas.
+<br>
+
+<b> DaemonSet:</b> Choose this method if you want NGINX Ingress Controller to run on all nodes or a subset of nodes.
 Before you start, update the command-line arguments for the NGINX Ingress Controller container in the relevant manifest file to meet your specific requirements.
 
-Using a Deployment
-For additional context on managing containers using Kubernetes Deployments, refer to the official Kubernetes Deployments documentation.
+## Using a Deployment
 
 When you deploy NGINX Ingress Controller as a Deployment, Kubernetes automatically sets up a single NGINX Ingress Controller pod.
 
-For NGINX, run:
 
- Copy
+ ```
 kubectl apply -f deployments/deployment/nginx-ingress.yaml
-For NGINX Plus, run:
+```
 
- Copy
-kubectl apply -f deployments/deployment/nginx-plus-ingress.yaml
-Update the nginx-plus-ingress.yaml file to include your chosen image from the F5 Container registry or your custom container image.
-
-Using a DaemonSet
-For additional context on managing containers using Kubernetes DaemonSets, refer to the official Kubernetes DaemonSets documentation.
+## Using a DaemonSet
 
 When you deploy NGINX Ingress Controller as a DaemonSet, Kubernetes creates an Ingress Controller pod on every node in the cluster.
 
-For NGINX, run:
 
- Copy
+
+ ```
 kubectl apply -f deployments/daemon-set/nginx-ingress.yaml
-For NGINX Plus, run:
 
- Copy
-kubectl apply -f deployments/daemon-set/nginx-plus-ingress.yaml
-Update the nginx-plus-ingress.yaml file to include your chosen image from the F5 Container registry or your custom container image.
+```
 
-Confirm NGINX Ingress Controller is running
+## Confirm NGINX Ingress Controller is running
+
 To confirm the NGINX Ingress Controller pods are operational, run:
-
- Copy
+```
+ 
 kubectl get pods --namespace=nginx-ingress
-How to access NGINX Ingress Controller
-Using a Deployment
-For Deployments, you have two options for accessing NGINX Ingress Controller pods.
+```
+## How to access NGINX Ingress Controller
 
-Option 1: Create a NodePort service
-For more information about the NodePort service, refer to the Kubernetes documentation.
-
-To create a service of type NodePort, run:
-
- Copy
-kubectl create -f deployments/service/nodeport.yaml
-Kubernetes automatically allocates two ports on every node in the cluster. You can access NGINX Ingress Controller by combining any node’s IP address with these ports.
-
-Option 2: Create a LoadBalancer service
-For more information about the LoadBalancer service, refer to the Kubernetes documentation.
-
-To set up a LoadBalancer service, run one of the following commands based on your cloud provider:
-
-GCP or Azure:
-
- Copy
-kubectl apply -f deployments/service/loadbalancer.yaml
-AWS:
-
- Copy
-kubectl apply -f deployments/service/loadbalancer-aws-elb.yaml
-If you’re using AWS, Kubernetes will set up a Classic Load Balancer (ELB) in TCP mode. This load balancer will have the PROXY protocol enabled to pass along the client’s IP address and port.
-
-AWS users: Follow these additional steps to work with ELB in TCP mode.
-
-Add the following keys to the nginx-config.yaml ConfigMap file, which you created in the Create common resources section.
-
- Copy
-proxy-protocol: "True"
-real-ip-header: "proxy_protocol"
-set-real-ip-from: "0.0.0.0/0"
-Update the ConfigMap:
-
- Copy
-kubectl apply -f deployments/common/nginx-config.yaml
-Note:
-AWS users have more customization options for their load balancers. These include choosing the load balancer type and configuring SSL termination. Refer to the Kubernetes documentation to learn more.
-To access NGINX Ingress Controller, get the public IP of your load balancer.
-
-For GCP or Azure, run:
-
- Copy
-kubectl get svc nginx-ingress --namespace=nginx-ingress
-For AWS find the DNS name:
-
- Copy
-kubectl describe svc nginx-ingress --namespace=nginx-ingress
-Resolve the DNS name into an IP address using nslookup:
-
- Copy
-nslookup <dns-name>
-You can also find more details about the public IP in the status section of an ingress resource. For more details, refer to the Reporting Resources Status doc.
-
-Using a DaemonSet
 Connect to ports 80 and 443 using the IP address of any node in the cluster where NGINX Ingress Controller is running.
 
-Uninstall NGINX Ingress Controller
-Warning:
-Proceed with caution when performing these steps, as they will remove NGINX Ingress Controller and all related resources, potentially affecting your running services.
-Delete the nginx-ingress namespace: To remove NGINX Ingress Controller and all auxiliary resources, run:
+## Uninstall NGINX Ingress Controller
 
- Copy
+Delete the nginx-ingress namespace:
+
+ To remove NGINX Ingress Controller and all auxiliary resources, run:
+
+ ```
 kubectl delete namespace nginx-ingress
-Remove the cluster role and cluster role binding:
+```
+ Remove the cluster role and cluster role binding:
 
- Copy
+```
 kubectl delete clusterrole nginx-ingress
 kubectl delete clusterrolebinding nginx-ingress
-Delete the Custom Resource Definitions:
-
-DELETING CRDS FROM SINGLE YAML
-DELETING CRDS AFTER CLONING THE REPO
-Delete core custom resource definitions: shell kubectl delete -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds.yaml
-Delete custom resource definitions for the NGINX App Protect WAF module:
- Copy
+```
+Delete the Custom Resource Definitions(CRDs):
+```
  kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds-nap-waf.yaml
- ```
 
-3. Delete custom resource definitions for the NGINX App Protect DoS module:
-```shell
- kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.5.1/deploy/crds-nap-dos.yaml
  ```
