@@ -147,6 +147,18 @@ When you deploy NGINX Ingress Controller as a DaemonSet, Kubernetes creates an I
 kubectl apply -f deployments/daemon-set/nginx-ingress.yaml
 
 ```
+# Using a Deployment or daemonset
+For Deployments, you have two options for accessing NGINX Ingress Controller pods.
+
+ Create a NodePort service
+For more information about the NodePort service, refer to the Kubernetes documentation.
+
+To create a service of type NodePort, run:
+
+ ```
+kubectl create -f deployments/service/nodeport.yaml
+```
+Kubernetes automatically allocates two ports on every node in the cluster. You can access NGINX Ingress Controller by combining any node’s IP address with these ports.
 
 ## Confirm NGINX Ingress Controller is running
 
